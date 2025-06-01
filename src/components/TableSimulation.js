@@ -2,13 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
 import Header from './Layout/Header';
-
-import logo from '../imgs/logo.png';
 
 import ErrorPopup from './ErrorPopup';
 import LoadingSpinner from './LoadingSpinner';
@@ -17,6 +13,8 @@ const TableSimulation = () => {
   const [data, setData] = useState([]); // État pour les données récupérées
   const [currentPage, setCurrentPage] = useState(1); // État pour la pagination
   const [itemsPerPage] = useState(50); // Nombre d'éléments par page
+
+  const navigate = useNavigate();
 
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(50); // taille par défaut
@@ -141,6 +139,12 @@ const TableSimulation = () => {
             </form>
 
           <div className="flex justify-between mt-4">
+            <button
+              className="px-4 py-2 bg-green-500 text-white rounded-lg"
+              onClick={() => navigate('/add-simulation')}
+            >
+              +
+            </button>
             <button onClick={exportCSV} className="px-4 py-2 bg-blue-500 text-white rounded-lg">
               Exporter CSV
             </button>

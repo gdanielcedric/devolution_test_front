@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { UsersIcon } from '@heroicons/react/solid';
+import { UsersIcon, ArchiveIcon, } from '@heroicons/react/solid';
 
 const SideMenu = () => {
   const location = useLocation(); // Obtenir la route actuelle
@@ -10,6 +10,8 @@ const SideMenu = () => {
   const menuItems = [
     { name: 'Simulations', path: '/simulations', icon: <UsersIcon className="h-6 w-6" style={{display:'unset'}} /> },
     { name: 'Subscriptions', path: '/subscriptions', icon: <UsersIcon className="h-6 w-6" style={{display:'unset'}} /> },
+    { name: 'Suscribers', path: '/suscribers', icon: <UsersIcon className="h-6 w-6" style={{display:'unset'}} /> },
+    { name: 'Products', path: '/products', icon: <ArchiveIcon className="h-6 w-6" style={{display:'unset'}} /> },
   ];
 
   return (

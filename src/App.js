@@ -7,6 +7,8 @@ import AddSimulationPage from './pages/AddSimulationPage';
 import AddSubscriptionPage from './pages/AddSubscriptionPage';
 import SimulationPage from './pages/SimulationPage';
 import SubscriptionPage from './pages/SubscriptionPage';
+import SuscriberPage from './pages/SuscriberPage';
+import ProductPage from './pages/ProductPage';
 
 import PrivateRoute from "./PrivateRoute";
 
@@ -41,10 +43,16 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route element={<PrivateRoute />}>
+            <Route path="/products" element={<ProductPage />} />
+        </Route>
+        <Route element={<PrivateRoute />}>
             <Route path="/subscriptions" element={<SubscriptionPage />} />
         </Route>
         <Route element={<PrivateRoute />}>
             <Route path="/simulations" element={<SimulationPage />} />
+        </Route>
+        <Route element={<PrivateRoute />}>
+            <Route path="/suscribers" element={<SuscriberPage />} />
         </Route>
         <Route element={<PrivateRoute />}>
             <Route path="/add-simulation" element={<AddSimulationPage />} />

@@ -9,18 +9,17 @@ import Header from './Layout/Header';
 import ErrorPopup from './ErrorPopup';
 import LoadingSpinner from './LoadingSpinner';
 
-const TableSubscription = () => {
+const TableSuscriber = () => {
   const [data, setData] = useState([]); // État pour les données récupérées
   const [currentPage, setCurrentPage] = useState(1); // État pour la pagination
   const [itemsPerPage] = useState(50); // Nombre d'éléments par page
-
-  const navigate = useNavigate();
 
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(50); // taille par défaut
   const [totalItems, setTotalItems] = useState(0);
   const [Filter, setFilter] = useState({
-    quoteReference: ""
+    telephone: "",
+    cni: "",
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -37,11 +36,11 @@ const TableSubscription = () => {
     const dataSend = {pageIndex, pageSize, Filter};
 
     //endpoint
-    const listEndpoint = `${process.env.REACT_APP_API_URL}${process.env.REACT_APP_SUBSCRIPTIONS_ENDPOINT}/all`;
+    const listEndpoint = `${process.env.REACT_APP_API_URL}${process.env.REACT_APP_SUSCRIBERS_ENDPOINT}/all`;
 
     try {
       const response = await axios.post(listEndpoint, dataSend, config); // Remplacer par ton endpoint
-      console.log('Data à afficher (Subscriptions)', response);
+      console.log('Data à afficher (Suscribers)', response);
       setData(response.data.items); // Mettre à jour les données récupérées
       setTotalItems(response.data.totalItems); // Mettre à jour le nombre total d'éléments
     } catch (error) {
@@ -74,31 +73,31 @@ const TableSubscription = () => {
 
   // Export en CSV
   const exportCSV = () => {
-    const csvRows = data.map(item => `${item.quoteReference},${item.suscriberNom},${item.suscriberPhone},${item.immatriculationNumber},${item.assurProduct},${item.price},${item.createdAt},${item.status}`).join("\n");
+    const csvRows = data.map(item => `${item.nom},${item.prenom},${item.telephone},${item.cni},${item.address},${item.ville},${item.createdAt},${item.status}`).join("\n");
     const blob = new Blob([csvRows], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.setAttribute('href', url);
-    a.setAttribute('download', 'export_subscriptions.csv');
+    a.setAttribute('download', 'export_suscribers.csv');
     a.click();
   };
 
   // Export en Excel
   const exportExcel = () => {
-    const filteredForExcel = data.map(({ quoteReference, suscriberNom, suscriberPhone, immatriculationNumber,assurProduct, price, createdAt, status}) => ({
-      quoteReference,
-      suscriberNom,
-      suscriberPhone,
-      immatriculationNumber,
-      assurProduct,
-      price,
+    const filteredForExcel = data.map(({ nom, prenom, telephone, cni, address, ville, createdAt, status}) => ({
+      nom,
+      prenom,
+      telephone,
+      cni,
+      address,
+      ville,
       createdAt,
       status: status ? 'ACTIF' : 'INACTIF' // Convertir le statut en texte
     }));
     const ws = XLSX.utils.json_to_sheet(filteredForExcel); // Crée la feuille avec les champs filtrés
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Export");
-    XLSX.writeFile(wb, "export_subscriptions.xlsx");
+    XLSX.writeFile(wb, "export_suscribers.xlsx");
   };
 
   const handleFilterChange = (e) => {
@@ -128,10 +127,18 @@ const TableSubscription = () => {
             {/* Champ de recherche */}
             <form onSubmit={handleFilterSubmit} className="mb-4 flex flex-wrap gap-2">
               <input
+                type="phone"
+                name="telephone"
+                placeholder="telephone"
+                value={Filter.telephone}
+                onChange={handleFilterChange}
+                className="border p-2 rounded"
+              />
+              <input
                 type="text"
-                name="quoteReference"
-                placeholder="quoteReference"
-                value={Filter.quoteReference}
+                name="CNI"
+                placeholder="CNI"
+                value={Filter.cni}
                 onChange={handleFilterChange}
                 className="border p-2 rounded"
               />
@@ -141,12 +148,6 @@ const TableSubscription = () => {
             </form>
 
           <div className="flex justify-between mt-4">
-            <button
-              className="px-4 py-2 bg-green-500 text-white rounded-lg"
-              onClick={() => navigate('/add-subscription')}
-            >
-              +
-            </button>
             <button onClick={exportCSV} className="px-4 py-2 bg-blue-500 text-white rounded-lg">
               Exporter CSV
             </button>
@@ -167,14 +168,12 @@ const TableSubscription = () => {
         <table className="min-w-full table-auto">
           <thead>
             <tr className="bg-gray-800 text-white">
-              <th className="px-3 py-2">Reference</th>
-              <th className="px-3 py-2">Nom Souscripteur</th>
-              <th className="px-3 py-2">Contact Souscripteur</th>
-              <th className="px-3 py-2">Immatriculation vehicule</th>
-              <th className="px-3 py-2">Produit d'assurance</th>
-              <th className="px-3 py-2">Montant Prime</th>
-              <th className="px-3 py-2">Etat</th>
-              <th className="px-3 py-2">Date Création</th>
+              <th className="px-3 py-2">Nom</th>
+              <th className="px-3 py-2">Prenoms</th>
+              <th className="px-3 py-2">Telephone</th>
+              <th className="px-3 py-2">CNI</th>
+              <th className="px-3 py-2">Adresse</th>
+              <th className="px-3 py-2">Ville</th>
               <th className="px-3 py-2">Statut</th>
             </tr>
           </thead>
@@ -182,14 +181,12 @@ const TableSubscription = () => {
             {currentData.length > 0 ? (
               currentData.map((item, index) => (
                 <tr key={index} className="bg-gray-100">
-                  <td className="border px-3 py-2">{item.quoteReference}</td>
-                  <td className="border px-3 py-2">{item.suscriberNom}</td>
-                  <td className="border px-3 py-2">{item.suscriberPhone}</td>
-                  <td className="border px-3 py-2">{item.immatriculationNumber}</td>
-                  <td className="border px-3 py-2">{item.assurProduct}</td>
-                  <td className="border px-3 py-2">{item.price}</td>
-                  <td className="border px-3 py-2">{item.step}</td>
-                  <td className="border px-3 py-2">{item.createdAt}</td>
+                  <td className="border px-3 py-2">{item.nom}</td>
+                  <td className="border px-3 py-2">{item.prenom}</td>
+                  <td className="border px-3 py-2">{item.telephone}</td>
+                  <td className="border px-3 py-2">{item.cni}</td>
+                  <td className="border px-3 py-2">{item.address}</td>
+                  <td className="border px-3 py-2">{item.ville}</td>
                   <td className="border px-3 py-2">{item.status == true ? 'ACTIF' : 'INACTIF'}</td>
                 </tr>
               ))
@@ -246,4 +243,4 @@ const TableSubscription = () => {
   );
 };
 
-export default TableSubscription;
+export default TableSuscriber;

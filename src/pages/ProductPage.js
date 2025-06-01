@@ -1,15 +1,15 @@
 import SideMenu from '../components/Layout/SideMenu';
-import AddSubscription from '../components/AddSubscription';
+import TableProduct from '../components/TableProduct';
 
-const AddSubscriptionPage = () => {
+const ProductPage = () => {
   return (
     <div className="flex h-full">
       <SideMenu />
       <div className="flex-1 bg-gray-100">
-        <AddSubscription />
+        <TableProduct />
       </div>
     </div>
   );
 };
 
-export default AddSubscriptionPage;
+export default ProductPage;
