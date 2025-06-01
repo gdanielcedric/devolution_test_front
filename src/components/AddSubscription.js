@@ -410,7 +410,7 @@ const AddSubscription = () => {
                       <p><strong>Montant de la prime :</strong> {prime} XOF</p>
                     </div>
                     <div className="mt-4 text-right">
-                      <button onClick={() => navigate('/simulations')} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                      <button onClick={() => navigate('/subscriptions')} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
                         Terminer
                       </button>
                     </div>

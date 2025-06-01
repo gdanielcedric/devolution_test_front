@@ -181,7 +181,7 @@ const TableSimulation = () => {
                   <td className="border px-3 py-2">{item.quoteReference}</td>
                   <td className="border px-3 py-2">{item.immatriculationNumber}</td>
                   <td className="border px-3 py-2">{item.assurProduct}</td>
-                  <td className="border px-3 py-2">{item.price}</td>
+                  <td className="border px-3 py-2">{item.price} XOF</td>
                   <td className="border px-3 py-2">{item.createdAt}</td>
                   <td className="border px-3 py-2">{item.endDate}</td>
                   <td className="border px-3 py-2">{item.status == true ? 'ACTIF' : 'INACTIF'}</td>

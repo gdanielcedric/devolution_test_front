@@ -108,6 +108,40 @@ const TableSubscription = () => {
     });
   };
 
+  const Upload = async (id) => {
+    try {
+      // get token from session storage
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    const token = user?.token;
+
+    //config
+    const config = {
+      headers: { Authorization: `Bearer ${token}` }
+    };
+
+    //endpoint
+    const listEndpoint = `${process.env.REACT_APP_API_URL}${process.env.REACT_APP_SUBSCRIPTIONS_ENDPOINT}/${id}/attestation`;
+
+      const response = await axios.get(listEndpoint, {
+        responseType: 'blob', // important
+        headers: {
+          Accept: 'application/pdf',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'attestation.pdf'); // Nom du fichier
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Erreur lors du téléchargement du PDF :', error);
+    }
+  };
+
   const handleFilterSubmit = (e) => {
     e.preventDefault();
     setPageIndex(0); // reset pagination
@@ -176,6 +210,7 @@ const TableSubscription = () => {
               <th className="px-3 py-2">Etat</th>
               <th className="px-3 py-2">Date Création</th>
               <th className="px-3 py-2">Statut</th>
+              <th className="px-3 py-2">Attestation</th>
             </tr>
           </thead>
           <tbody>
@@ -187,10 +222,18 @@ const TableSubscription = () => {
                   <td className="border px-3 py-2">{item.suscriberPhone}</td>
                   <td className="border px-3 py-2">{item.immatriculationNumber}</td>
                   <td className="border px-3 py-2">{item.assurProduct}</td>
-                  <td className="border px-3 py-2">{item.price}</td>
+                  <td className="border px-3 py-2">{item.price} XOF</td>
                   <td className="border px-3 py-2">{item.step}</td>
                   <td className="border px-3 py-2">{item.createdAt}</td>
                   <td className="border px-3 py-2">{item.status == true ? 'ACTIF' : 'INACTIF'}</td>
+                  <td className="border px-3 py-2">
+                    <button
+                      onClick={() => Upload(`${item.id}`)}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Upload
+                    </button>
+                  </td>
                 </tr>
               ))
             ) : (
